@@ -1,0 +1,279 @@
+---
+title: Amazon Sales Dataset
+format:
+  html:
+    code-fold: true
+    self-contained: true
+jupyter: python3
+execute:
+  cache: false
+theme:
+  light: cosmo
+  dark: darkly
+warning: false
+---
+
+# Descrição do Problema
+
+Fonte dos dados: https://www.kaggle.com/datasets/karkavelrajaj/amazon-sales-dataset
+
+A Amazon é responsável por uma grande quantidade de vendas online. A empresa disponibiliza um dataset com informações sobre avaliações de produtos em diferentes categorias. O dataset contém informações sobre avaliações de produtos, como preço, categorias e avaliação dos clientes.
+
+Durante o processamento dos dados, a coluna Categoria se tornou 3, sendo elas
+- Categoria
+- Subcategoria
+- Categoria Específica
+
+O objetivo da análise inicial é identificar produtos e categorias mais avaliados
+
+As perguntas chave que devem ser respondidas são:
+
+
+- Quais são as categorias mais avaliadas?
+- Quais as categorias mais bem avaliadas (média e mediana)?
+- Qual é o desconto médio e mediano por categoria?
+- Qual é o preço médio por categoria?
+
+- Quais são as subcategorias mais avaliadas?
+- Quais as subcategorias mais bem avaliadas (média e mediana)?
+- Qual é o desconto médio e mediano por subcategoria?
+- Qual é o preço médio por subcategoria?
+
+- Quais são as categorias específicas mais avaliadas?
+- Quais as categorias específicas mais bem avaliadas (média e mediana)?
+- Qual é o desconto médio e mediano por categorias espippecíficas?
+- Qual é o preço médio por categorias específicas?
+
+- Os produtos mais caros são bem avaliados?
+- Há uma relação entre o preço e avaliação dos produtos?
+
+
+Essas perguntas ajudarão a entender melhor a performance de vendas relacionadas
+aos descontos. É importante entender se maiores descontos estão relacionados a
+maiores vendas, ou se produtos mais caros são mais bem avaliados.
+
+Com essa informação extraída dos dados, a Amazon poderá tomar decisões mais
+assertivas sobre a estratégia de vendas, como por exemplo, aumentar o desconto
+de produtos com baixa avaliação, ou aumentar o preço de produtos bem avaliados.
+
+# Descrição dos dados
+
+## Colunas
+- product_id - ID do Produto
+- product_name - Nome do Produto
+- category - Categoria do Produto
+- discounted_price - Preço com Desconto do Produto
+- actual_price - Preço Real do Produto
+- discount_percentage - Porcentagem de Desconto do Produto
+- rating - Avaliação do Produto
+- rating_count - Quantidade de Avaliações do Produto
+- about_product - Descrição do Produto
+- user_id - ID do Usuário que escreveu a avaliação
+- user_name - Nome do Usuário que escreveu a avaliação
+- review_id - ID da Avaliação
+- review_title - Título da Avaliação
+- review_content - Conteúdo da Avaliação
+- img_link - Link da Imagem do Produto
+- product_link - Link do Produto
+
+# Visão geral dos dados
+
+## Importando as bibliotecas
+
+```{python}
+import pandas as pd
+import plotly.graph_objects as go
+import numpy as np
+```
+
+## Carregando os dados
+
+```{python}
+df = pd.read_csv("amazon.csv")
+df.head()
+```
+
+## Informações sobre os dados
+```{python}
+df.info()
+```
+
+## Processamento dos dados
+### Dados duplicados
+```{python}
+df["product_id"].duplicated().sum()
+```
+
+Tem 110 produtos duplicados no dataset ao se observar a coluna product_id, que
+era esperado ser único. Por isso, esses dados duplicados serão removidos e a
+primeira ocorrência será mantida.
+
+```{python}	
+df = df.drop_duplicates("product_id")
+```
+
+### Dados faltantes
+
+Dois produtos não têm contagem de avaliação, então esses produtos serão removidos da análise. Dessa forma ainda se mantém 1463 de 1465 produtos.
+
+```{python}
+df.isna().sum()
+```
+
+```{python}
+df = df.dropna(subset=["rating_count"])
+```
+
+### Moeda
+Os valores estão em Rúpias Indianas (₹), então será feita a conversão para dólares americanos (USD) para facilitar a compreensão dos valores.
+No dia 01/10/2024, a rúpia indiana estava cotada a 0.012 USD, então será utilizada essa cotação para a conversão.
+
+```{python}
+df["discounted_price"] = df["discounted_price"].str.replace(
+    "₹", "").str.replace(",", "").astype(float)
+df["actual_price"] = df["actual_price"].str.replace(
+    "₹", "").str.replace(",", "").astype(float)
+```
+
+```{python}
+df["discounted_price"] = df["discounted_price"]*0.012
+df["actual_price"] = df["actual_price"]*0.012
+```
+
+### Porcentagem de desconto
+Os valores de desconto estão em porcentagem em forma de texto, então será feita a conversão para valores numéricos.
+
+```{python}
+df["discount_percentage"] = df[
+    "discount_percentage"].str.replace("%", "").astype(float)
+```
+
+Verificando o resultado das transformações
+
+```{python}
+df.head()
+```
+
+Verificando o tipo dos dados
+```{python}
+df.dtypes
+```
+
+As colunas rating, rating_count ainda estão como texto, então serão convertidas para valores numéricos.
+#### rating
+```{python}
+df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
+```
+
+```{python}
+df["rating"].isna().sum()
+```
+
+Após conversão, um valor NA foi gerado e essa linha será removida.
+
+```{python}
+df = df.dropna(subset=["rating"])
+```
+
+#### rating_count
+```{python}
+df["rating_count"].value_counts()
+```
+
+Substituindo as vírgulas por pontos e convertendo para valores numéricos
+
+```{python}
+df["rating_count"] = df["rating_count"].str.replace(",", ".")
+df["rating_count"]
+```
+
+```{python}
+df["rating_count"] = pd.to_numeric(df["rating_count"], errors="coerce")
+```
+
+Verificando o resultado das transformações
+```{python}
+df.head()
+```
+
+Verificando se ainda tem algum valor NA
+```{python}
+df["rating_count"].isna().sum()
+```
+
+47 valores NA foram gerados e essas linhas serão removidas.
+
+```{python}
+df = df.dropna(subset=["rating_count"])
+```
+
+### Verificando os tipos dos dados
+```{python}
+df.dtypes
+```
+
+Verificando os tipos de dados, agora todas as colunas estão com os tipos corretos.
+
+discounted_price, actual_price, discount_percentage, rating e rating_count são do tipo numérico, enquanto
+que as demais colunas são do tipo texto.
+
+Verificando se ainda tem algum valor NA
+
+```{python}
+df.isna().sum()
+```
+
+E finalizando a verificação dos dados, nenhuma coluna tem NA.
+
+### Categorias e Subcategorias
+```{python}
+df["category"].value_counts()
+```
+
+A coluna `category` contém categorias e subcategorias, então será feita a separação desses valores em duas colunas. Os valores estão separados por "|" e serão separados em duas colunas. Como pode se ter mais de uma sub-catgoria, pois pode ter mais de um "|", será selecionado o primeiro valor como categoria, o segundo valor como subcategoria e o último como categoria específica. Pode ter casos em que a subcategoria será igual à categoria específica.
+
+```{python}
+df["main_category"] = df["category"].str.split("|").str[0]
+df["sub_category"] = df["category"].str.split("|").str[1]
+df["specific_category"] = df["category"].str.split("|").str[-1]
+```
+
+Verificando o resultado da separação
+```{python}
+df[["category", "main_category", "sub_category",
+    "specific_category"]].sample(5)
+```
+
+Agora se pode remover a coluna `category`
+```{python}
+df = df.drop(columns=["category"])
+```
+
+Finalizando o processamento dos dados, a coluna `category` foi dividida em três colunas, `main_category`, `subcategory` e `specific_category`. Então a coluna `category` foi removida.
+
+### Limpeza das colunas
+Como não será levado em consideração o título e conteúdo da avaliação, as colunas relacionadas aos usuários, título e conteúdo da avaliação serão removidas.
+
+```{python}
+df = df.drop(columns=["user_id", "user_name", "review_id",
+                      "review_title", "review_content"])
+```
+
+Verificando o resultado da limpeza
+```{python}
+df.head()
+```
+
+Quantidade de produtos após a limpeza
+```{python}
+df.shape
+```
+
+Finalizando a limpeza dos dados tem-se 1305 produtos que foram revistos e a análise pode ser feita.
+
+## Salvando os dados
+Após o processamento dos dados, o dataset foi salvo em um arquivo Excel para ser carregado no Tableau.
+
+```{python}
+df.to_excel("amazon_cleaned.xlsx", index=False)
+```
