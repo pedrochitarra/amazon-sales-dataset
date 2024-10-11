@@ -1,5 +1,5 @@
 ---
-title: Amazon Sales Dataset
+title: Relatório dos dados de vendas da Amazon - Objetivo e Processamento dos Dados
 format:
   html:
     code-fold: true
@@ -13,21 +13,22 @@ theme:
 warning: false
 ---
 
+Aluno: Pedro Henrique Batista Chitarra
+
+Professor: Nilton Kazuyuki Ueda
+
 # Descrição do Problema
 
 Fonte dos dados: https://www.kaggle.com/datasets/karkavelrajaj/amazon-sales-dataset
 
-A Amazon é responsável por uma grande quantidade de vendas online. A empresa disponibiliza um dataset com informações sobre avaliações de produtos em diferentes categorias. O dataset contém informações sobre avaliações de produtos, como preço, categorias e avaliação dos clientes.
+A Amazon é responsável por uma quantidade enorme de vendas online e se tem
+informações sobre avaliações de diversos produtos em diferentes categorias.
 
-Durante o processamento dos dados, a coluna Categoria se tornou 3, sendo elas
-- Categoria
-- Subcategoria
-- Categoria Específica
-
-O objetivo da análise inicial é identificar produtos e categorias mais avaliados
+O objetivo da análise é identificar produtos e categorias mais avaliados (
+portanto, provavelmente mais vendidos) e entender a relação entre desconto, preço e
+quantidade de vendas.
 
 As perguntas chave que devem ser respondidas são:
-
 
 - Quais são as categorias mais avaliadas?
 - Quais as categorias mais bem avaliadas (média e mediana)?
@@ -46,7 +47,6 @@ As perguntas chave que devem ser respondidas são:
 
 - Os produtos mais caros são bem avaliados?
 - Há uma relação entre o preço e avaliação dos produtos?
-
 
 Essas perguntas ajudarão a entender melhor a performance de vendas relacionadas
 aos descontos. É importante entender se maiores descontos estão relacionados a
@@ -277,3 +277,142 @@ Após o processamento dos dados, o dataset foi salvo em um arquivo Excel para se
 ```{python}
 df.to_excel("amazon_cleaned.xlsx", index=False)
 ```
+
+# Análises realizadas
+
+## Total de avaliações por categoria
+
+Tem-se diversas categorias e inicialmente foi feita uma análise para verificar a quantidade de avaliações por categoria
+e entender quais são as categorias mais avaliadas.
+
+![Total de avaliações por categoria](pics/Total%20de%20avalia%C3%A7%C3%B5es%20por%20categoria.png)
+
+Para uma análise mais assertiva, serão avaliadas apenas produtos que pertencem às categorias Home&Kitchen, Electronics e Computer&Accessories,
+que são as categorias com maior quantidade de avaliações, bem acima das demais categorias.
+
+## Avaliação média por categoria
+
+Agora será feita uma análise para verificar a avaliação média por categoria, 
+entender quais são as categorias mais bem avaliadas e se há alguma em destaque.
+
+![Avaliação média por categoria](pics/Avalia%C3%A7%C3%A3o%20m%C3%A9dia%20por%20categoria.png)
+
+As categorias têm avaliações médias bem próximas, com a categoria Computer&Accessories com a maior avaliação média.
+
+## Desconto médio por categoria
+
+Será feita uma análise para verificar o desconto médio por categoria,
+entender quais são as categorias com maior desconto e se há alguma em destaque.
+
+![Desconto médio por categoria](pics/Desconto%20m%C3%A9dio%20por%20categoria.png)
+
+Os produtos relacionados a Computer&Accessories têm o maior desconto percentual médio, 
+com média bem acima da categoria Home&Kitchen e próxima da categoria Electronics.
+
+## Desconto médio para Computer&Accesories
+
+Uma vez selecionadas as 3 categorias que se destacaram nas análises anteriores, 
+será feita uma análise mais detalhada para a categoria Computer&Accessories.
+
+![Desconto médio para Computer&Accessories](pics/Desconto%20m%C3%A9dio%20para%20Computer%26Accesories.png)
+
+Há subcategorias com descontos percentuais médios bem acima de outras e em breve
+será feita uma relação com a quantidade de avaliações para entender se há relação
+entre desconto e quantidade de avaliações.
+
+## Desconto médio para Eletronics
+
+Agora será feita uma análise mais detalhada para a categoria Electronics.
+
+![Desconto médio para Eletronics](pics/Desconto%20m%C3%A9dio%20para%20Eletronics.png)
+
+As subcategorias aqui seguem o mesmo padrão da categoria Computer&Accessories, com
+descontos percentuais médios bem acima de outras e será feita a mesma análise para
+entender a relação entre desconto e quantidade de avaliações.
+
+## Desconto médio para Home&Kitchen
+
+Por fim, será feita uma análise mais detalhada para a categoria Home&Kitchen.
+
+![Desconto médio para Home&Kitchen](pics/Desconto%20m%C3%A9dio%20para%20Home%26Kitchen.png)
+
+As subcategorias aqui têm descontos percentuais médios bem parecidos, exceto pela
+subcategoria CraftMaterials que tem um desconto percentual médio bem abaixo das demais.
+
+## Quantidade de avaliações x Desconto para Eletronics
+
+Como a categoria de Eletronics tem a maior quantidade de avaliações, 
+é possível estabelecer uma relação entre essa medida e o desconto dado?
+
+![Quantidade de avaliações x Desconto para Eletronics](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20x%20Desconto%20para%20Eletronics.png)
+
+Observando o gráfico, não é possível estabelecer uma relação clara entre as 
+duas medidas, ainda que a linha de tendência seja inclinada positivamente.
+
+## Quantidade de avaliações x Desconto para Computer&Accessories
+
+Seguindo a mesma lógica, será feita uma análise para a categoria Computer&Accesories.
+
+![Quantidade de avaliações x Desconto para Computer&Accesories](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20x%20Desconto%20para%20Computer%26Accessories.png)
+
+Observando o gráfico, não é possível estabelecer uma relação clara entre as
+duas medidas, ainda que a linha de tendência seja inclinada positivamente.
+
+## Quantidade de avaliações x Desconto para Home&Kitchen
+
+Por fim, será feita uma análise para a categoria Home&Kitchen.
+
+![Quantidade de avaliações x Desconto para Home&Kitchen](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20x%20Desconto%20para%20Home%26Kitchen.png)
+
+Observando o gráfico, não é possível estabelecer uma relação clara entre as
+duas medidas, ainda que a linha de tendência seja inclinada positivamente.
+
+## Quantidade de avaliações e Desconto médio para Computer&Accesories
+
+Uma vez que o gráfico de dispersão não é suficiente para estabelecer uma relação clara entre as medidas,
+será feita uma análise mais detalhada para a categoria Computer&Accessories, com gráficos de barra
+para entender a relação entre a quantidade de avaliações e o desconto médio.
+
+![Quantidade de avaliações e Desconto médio para Computer&Accesories](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20e%20Desconto%20para%20Computer%26Accessories%20alto.png)
+
+A quantidade de USBCables vendida é muito grande e tende a serem preços baixos, por isso a análise irá focar nas outras subcategorias.
+
+![Quantidade de avaliações e Desconto médio para Computer&Accesories selecionado](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20e%20Desconto%20para%20Computer%26Accessories%20baixo.png)
+
+As subcategorias em geral têm descontos altos, exceto WirelessUSBAdapters, Keyboards&MouseSets e Mice, portanto o desconto para essas subcategorias pode ser reduzido, pois ao contrário das outras não depende tanto do desconto para serem muito vendidas
+
+## Quantidade de avaliações e Desconto médio para Eletronics
+
+Uma vez que o gráfico de dispersão não é suficiente para estabelecer uma relação clara entre as medidas,
+será feita uma análise mais detalhada para a categoria Eletronics, com gráficos de barra
+para entender a relação entre a quantidade de avaliações e o desconto médio.
+
+![Quantidade de avaliações e Desconto médio para Eletronics](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20e%20Desconto%20para%20Eletronics.png)
+
+Os descontos de SmartWatches, RemoteControls, In-Ear, HDMICables e ScreenProtectors são importantes para que essas subcategorias sejam muito vendidas
+
+Por outro lado, os descontos para SmartPhones, DisposableBatteries e SmartTelevisions são bem menores e ainda assim essas categorias figuram nos mais vendidos
+
+Uma estratégia para ter mais lucro pode ser reduzir o desconto de SmartPhones e DisposableBatteries, que já tem um alto número de vendas com desconto não tão alto.
+
+## Quantidade de avaliações e Desconto médio para Home&Kitchen
+
+Por fim, será feita uma análise mais detalhada para a categoria Home&Kitchen, com gráficos de barra
+para entender a relação entre a quantidade de avaliações e o desconto médio.
+
+![Quantidade de avaliações e Desconto médio para Home&Kitchen](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20e%20Desconto%20para%20Home%26Kitchen.png)
+
+Os valores de deconto são próximos para as subcategorias de Home&Kitchen, apenas SteamIrons tem um valor menor, que poderia ser reduzido, já que mesmo baixo ainda figura entre os mais vendidos
+
+# Recomendações
+
+Para cada categoria será dada uma recomendação relacionada a descontos.
+
+## Computer&Accessories
+As subcategorias em geral têm descontos altos, exceto WirelessUSBAdapters, Keyboards&MouseSets e Mice, portanto o desconto para essas subcategorias pode ser reduzido, pois ao contrário das outras não depende tanto do desconto para serem muito vendidas
+
+## Eletronics
+Uma estratégia para ter mais lucro pode ser reduzir o desconto de SmartPhones e DisposableBatteries, que já tem um alto número de vendas com desconto não tão alto.
+
+## Home&Kitchen
+Os valores de deconto são próximos para as subcategorias de Home&Kitchen, apenas SteamIrons tem um valor menor, que poderia ser reduzido, já que mesmo baixo ainda figura entre os mais vendidos.
