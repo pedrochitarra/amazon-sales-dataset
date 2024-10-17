@@ -19,34 +19,29 @@ Professor: Nilton Kazuyuki Ueda
 
 # Descrição do Problema
 
-Fonte dos dados: https://www.kaggle.com/datasets/karkavelrajaj/amazon-sales-dataset
-
+Fonte dos dados: [Amazon Sales Dataset](https://www.kaggle.com/datasets/karkavelrajaj/amazon-sales-dataset)
+ 
 A Amazon é responsável por uma quantidade enorme de vendas online e se tem
 informações sobre avaliações de diversos produtos em diferentes categorias.
 
-O objetivo da análise é identificar produtos e categorias mais avaliados (
-portanto, provavelmente mais vendidos) e entender a relação entre desconto, preço e
+O objetivo da análise é identificar produtos e categorias mais avaliados (portanto, provavelmente mais vendidos) e entender a relação entre desconto, preço e
 quantidade de vendas.
 
 As perguntas chave que devem ser respondidas são:
 
 - Quais são as categorias mais avaliadas?
-- Quais as categorias mais bem avaliadas (média e mediana)?
-- Qual é o desconto médio e mediano por categoria?
-- Qual é o preço médio por categoria?
+- Quais as categorias mais bem avaliadas?
+- Qual é o desconto médio por categoria?
 
 - Quais são as subcategorias mais avaliadas?
-- Quais as subcategorias mais bem avaliadas (média e mediana)?
-- Qual é o desconto médio e mediano por subcategoria?
-- Qual é o preço médio por subcategoria?
+- Quais as subcategorias mais bem avaliadas?
+- Qual é o desconto médio por subcategoria?
 
 - Quais são as categorias específicas mais avaliadas?
-- Quais as categorias específicas mais bem avaliadas (média e mediana)?
-- Qual é o desconto médio e mediano por categorias específicas?
-- Qual é o preço médio por categorias específicas?
+- Quais as categorias específicas mais bem avaliadas?
+- Qual é o desconto médio por categorias específicas?
 
-- Os produtos mais caros são bem avaliados?
-- Há uma relação entre o preço e avaliação dos produtos?
+- Há uma relação entre o desconto e quantidade de avaliações dos produtos?
 
 Essas perguntas ajudarão a entender melhor a performance de vendas relacionadas
 aos descontos. É importante entender se maiores descontos estão relacionados a
@@ -104,7 +99,7 @@ df.info()
 df["product_id"].duplicated().sum()
 ```
 
-Tem 110 produtos duplicados no dataset ao se observar a coluna product_id, que
+Tem 114 produtos duplicados no dataset ao se observar a coluna product_id, que
 era esperado ser único. Por isso, esses dados duplicados serão removidos e a
 primeira ocorrência será mantida.
 
@@ -114,7 +109,7 @@ df = df.drop_duplicates("product_id")
 
 ### Dados faltantes
 
-Dois produtos não têm contagem de avaliação, então esses produtos serão removidos da análise. Dessa forma ainda se mantém 1463 de 1465 produtos.
+Dois produtos não têm contagem de avaliação, então esses produtos serão removidos da análise.
 
 ```{python}
 df.isna().sum()
@@ -160,7 +155,8 @@ df.dtypes
 ```
 
 As colunas rating, rating_count ainda estão como texto, então serão convertidas para valores numéricos.
-#### rating
+
+**rating**
 ```{python}
 df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
 ```
@@ -175,7 +171,7 @@ Após conversão, um valor NA foi gerado e essa linha será removida.
 df = df.dropna(subset=["rating"])
 ```
 
-#### rating_count
+**rating_count**
 ```{python}
 df["rating_count"].value_counts()
 ```
@@ -201,7 +197,7 @@ Verificando se ainda tem algum valor NA
 df["rating_count"].isna().sum()
 ```
 
-47 valores NA foram gerados e essas linhas serão removidas.
+43 valores NA foram gerados e essas linhas serão removidas.
 
 ```{python}
 df = df.dropna(subset=["rating_count"])
@@ -287,7 +283,7 @@ e entender quais são as categorias mais avaliadas.
 
 ![Total de avaliações por categoria](pics/Total%20de%20avalia%C3%A7%C3%B5es%20por%20categoria.png)
 
-Para uma análise mais assertiva, serão avaliadas apenas produtos que pertencem às categorias Home&Kitchen, Electronics e Computer&Accessories,
+Para uma análise mais assertiva, serão avaliados apenas produtos que pertencem às categorias Home&Kitchen, Electronics e Computer&Accessories,
 que são as categorias com maior quantidade de avaliações, bem acima das demais categorias.
 
 ## Avaliação média por categoria
@@ -379,7 +375,7 @@ A quantidade de USBCables vendida é muito grande e tende a serem preços baixos
 
 ![Quantidade de avaliações e Desconto médio para Computer&Accessories selecionado](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20e%20Desconto%20para%20Computer%26Accessories%20baixo.png)
 
-As subcategorias em geral têm descontos altos, exceto WirelessUSBAdapters, Keyboards&MouseSets e Mice, portanto o desconto para essas subcategorias pode ser reduzido, pois ao contrário das outras não depende tanto do desconto para serem muito vendidas
+As categorias específicas em geral têm descontos altos, exceto WirelessUSBAdapters, Keyboards&MouseSets e Mice, portanto o desconto para essas subcategorias pode ser reduzido, pois ao contrário das outras não depende tanto do desconto para serem muito vendidas
 
 ## Quantidade de avaliações e Desconto médio para Electronics
 
@@ -389,9 +385,9 @@ para entender a relação entre a quantidade de avaliações e o desconto médio
 
 ![Quantidade de avaliações e Desconto médio para Electronics](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20e%20Desconto%20para%20Eletronics.png)
 
-Os descontos de SmartWatches, RemoteControls, In-Ear, HDMICables e ScreenProtectors são importantes para que essas subcategorias sejam muito vendidas
+Os descontos de SmartWatches, RemoteControls, In-Ear, HDMICables e ScreenProtectors são importantes para que essas categorias específicas sejam muito vendidas
 
-Por outro lado, os descontos para SmartPhones, DisposableBatteries e SmartTelevisions são bem menores e ainda assim essas categorias figuram nos mais vendidos
+Por outro lado, os descontos para SmartPhones, DisposableBatteries e SmartTelevisions são bem menores e ainda assim essas categorias específicas figuram nos mais vendidos
 
 Uma estratégia para ter mais lucro pode ser reduzir o desconto de SmartPhones e DisposableBatteries, que já tem um alto número de vendas com desconto não tão alto.
 
@@ -402,17 +398,17 @@ para entender a relação entre a quantidade de avaliações e o desconto médio
 
 ![Quantidade de avaliações e Desconto médio para Home&Kitchen](pics/Quantidade%20de%20avalia%C3%A7%C3%B5es%20e%20Desconto%20para%20Home%26Kitchen.png)
 
-Os valores de desconto são próximos para as subcategorias de Home&Kitchen, apenas SteamIrons tem um valor menor, que poderia ser reduzido, já que mesmo baixo ainda figura entre os mais vendidos
+Os valores de desconto são próximos para as categorias específicas de Home&Kitchen, apenas SteamIrons tem um valor menor, que poderia ser reduzido, já que mesmo baixo ainda figura entre os mais vendidos
 
 # Recomendações
 
 Para cada categoria será dada uma recomendação relacionada a descontos.
 
 ## Computer&Accessories
-As subcategorias em geral têm descontos altos, exceto WirelessUSBAdapters, Keyboards&MouseSets e Mice, portanto o desconto para essas subcategorias pode ser reduzido, pois ao contrário das outras não depende tanto do desconto para serem muito vendidas
+As categorias específicas em geral têm descontos altos, exceto WirelessUSBAdapters, Keyboards&MouseSets e Mice, portanto o desconto para elas pode ser reduzido, pois ao contrário das outras não depende tanto do desconto para serem muito vendidas.
 
 ## Electronics
-Uma estratégia para ter mais lucro pode ser reduzir o desconto de SmartPhones e DisposableBatteries, que já tem um alto número de vendas com desconto não tão alto.
+Uma estratégia para ter mais lucro pode ser reduzir o desconto de SmartPhones e DisposableBatteries, que já tem um alto número de vendas com desconto não tão alto em relação a outras categorias específicas.
 
 ## Home&Kitchen
-Os valores de desconto são próximos para as subcategorias de Home&Kitchen, apenas SteamIrons tem um valor menor, que poderia ser reduzido, já que mesmo baixo ainda figura entre os mais vendidos.
+Os valores de desconto são próximos para as categorias específicas de Home&Kitchen, apenas SteamIrons tem um valor menor, que poderia ser reduzido, já que mesmo baixo ainda figura entre os mais vendidos em relação a outras categorias específicas.
